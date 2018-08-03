@@ -7,8 +7,167 @@
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+
+
+  <form [formGroup]="credentialsFG"  (ngSubmit)="manage(form.value)">
+
+                  <ion-list margin-bottom>
+
+                      <ion-item [ngClass]="{'error-border':!credentialsFG.controls.Name.valid && credentialsFG.controls.Name.touched}">
+                          <ion-label stacked>NAME</ion-label>
+                          <ion-input formControlName="Name" type="text"></ion-input>
+                      </ion-item>
+                      <ion-item *ngIf="credentialsFG.controls.Name.hasError('required') && credentialsFG.controls.Name.touched">
+                      <p ion-text color="danger">Name field is required!</p>
+                      </ion-item>
+                      <ion-item *ngIf="credentialsFG.controls.Name.hasError('minlength') && credentialsFG.controls.Name.touched">
+                      <p ion-text color="danger">Please enter a valid name with 2 or more characters!</p>
+                      </ion-item>
+                      <ion-item *ngIf="credentialsFG.controls.Name.hasError('pattern') && credentialsFG.controls.Name.touched">
+                        <p ion-text color="danger">Name can only take letters!</p>
+                        </ion-item>
+
+
+              <ion-item [ngClass]="{'error-border':!credentialsFG.controls.username.valid && credentialsFG.controls.username.touched}">
+                          <ion-label stacked>USERNAME</ion-label>
+                          <ion-input formControlName="username" type="text"></ion-input>
+                      </ion-item>
+                      <ion-item *ngIf="credentialsFG.controls.username.hasError('required') && credentialsFG.controls.username.touched">
+                      <p ion-text color="danger">Name field is required!</p>
+                      </ion-item>
+                      <ion-item *ngIf="credentialsFG.controls.username.hasError('minlength') && credentialsFG.controls.username.touched">
+                      <p ion-text color="danger">Please enter a valid username with 8 or more characters!</p>
+                      </ion-item>
+                      <ion-item *ngIf="credentialsFG.controls.username.hasError('pattern') && credentialsFG.controls.username.touched">
+                        <p ion-text color="danger">username can only take letters!</p>
+                        </ion-item>
+              
+
+                        <ion-item [ngClass]="{'error-border':!credentialsFG.controls.password.valid && credentialsFG.controls.password.touched}">
+                            <ion-label stacked>PASSWORD</ion-label>
+                            <ion-input formControlName="password" type="password"></ion-input>
+                        </ion-item>
+                        <ion-item *ngIf="credentialsFG.controls.password.hasError('required') && credentialsFG.controls.password.touched">
+                        <p ion-text color="danger">password field is required!</p>
+                        </ion-item>
+                        <ion-item *ngIf="credentialsFG.controls.password.hasError('minlength') &&credentialsFG.controls.password.touched">
+                        <p ion-text color="danger">Please enter a valid password with 8 or more characters!</p>
+                        </ion-item>
+                        <ion-item *ngIf="credentialsFG.controls.password.hasError('pattern') && credentialsFG.controls.password.touched">
+                          <p ion-text color="danger">password can only take UPPERCASE letters And LOWWER CASE LETTERS
+                            AND  numbers only!</p>
+                          </ion-item> 
+
+           <!-- Assign the technologies FormArray to the form
+                where we want to track/generate new input track fields -->
+         <div
+            formArrayName="AddSkills"
+            margin-bottom>
+  
+  
+              <!-- Assign a FormGroupName property binding to track
+                   and manage each separate generated input field.
+                   Also iterate through the technologies FormArray to
+                   correctly track/render new input fields against
+                   existing fields -->
+              <section
+                 [formGroupName]="i"
+                 *ngFor="let skill of credentialsFG.controls.AddSkills.controls; let i = index">
+                 <ion-item-group>
+                     <ion-item-divider color="light">USER please enter skill and level #{{ i + 1 }}</ion-item-divider>
+
+               
+                      <ion-item>
+                       <ion-label floating>skills name:</ion-label>
+                       <ion-input
+                          type="text"
+                          maxlength="50"
+                          FormControlName=" SkillsName"></ion-input>
+                    </ion-item>
+
+                     <!-- <ion-item *ngIf="credentialsFG.controls.SkillsName.hasError('required') && credentialsFG.controls.SkillsName.touched">
+                        <p ion-text color="danger">skills name field is required!</p>
+                        </ion-item>
+                        <ion-item *ngIf="credentialsFG.controls.SkillsName.hasError('pattern') && credentialsFG.controls.SkillsName.touched">
+                            <p ion-text color="danger">skills name can only take  LETTERS!</p>
+                            </ion-item>   -->
+                            
+                    <ion-item>
+                        <ion-label floating>skills level:</ion-label>
+                        <ion-input
+                           type="text"
+                           maxlength="50"
+                           FormControlName=" SkillsLevel"></ion-input>
+                     </ion-item>
+                     <!-- <ion-item *ngIf="credentialsFG.controls.SkillsLevel.hasError('required') && credentialsFG.controls.SkillsLevel.touched">
+                        <p ion-text color="danger">skills level field is required!</p>
+                        </ion-item>
+                        <ion-item *ngIf="credentialsFG.controls.SkillsLevel.hasError('pattern') && credentialsFG.controls.SkillsLevel.touched">
+                            <p ion-text color="danger">skills name can only take numbers!</p>
+                            </ion-item>  -->
+
+                    <!-- Allow generated input field to be removed -->
+                    <span
+                       float-right
+                       ion-button
+                       icon-left
+                       clear
+                       *ngIf="credentialsFG.controls.AddSkills.length > 1"
+                       (click)="removeInputField(i)">
+                       <ion-icon name="close"></ion-icon>
+                       Remove
+                    </span>
+                 </ion-item-group>
+              </section>
+           </div>
+  
+  
+           <!-- Allow new input field to be generated/added -->
+            <span
+              ion-button
+              float-left
+              icon-left
+              clear
+              (click)="addNewInputField()">
+                 <ion-icon name="add"></ion-icon>
+                 Add a new skill
+           </span> 
+   
+            <!-- <span
+              ion-button
+              float-left
+              icon-left
+              clear
+              (click)="getSkills(i)">
+                 <ion-icon name="add"></ion-icon>
+                 Add a new skill
+           </span> -->
+   
+  
+        </ion-list>
+  
+  
+        <!-- Only allow form to be submitted IF validation criteria for
+                input fields has been successfully passed -->
+           <button
+            ion-button
+            block
+            margin-top
+            color="primary"
+            text-center
+            [disabled]="!credentialsFG.valid">Submit</button>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+          </form>
+  
+
+ 
+
 </ion-content>
